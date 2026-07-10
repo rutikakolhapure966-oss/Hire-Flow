@@ -1,103 +1,40 @@
-import React, { useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import MainLayout from '../layouts/MainLayout'
-import Button from '../components/Button'
-import Spinner from '../components/Spinner'
-import { motion } from 'framer-motion'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import api from '../services/api';
 
-const Login = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  })
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const { login } = useAuth()
-  const navigate = useNavigate()
-  const location = useLocation()
+export default function Login() {
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-
+  const onSubmit = async (data) => {
     try {
-      const user = await login(formData.email, formData.password)
-      const from = location.state?.from?.pathname
-      navigate(from || (user.role === 'recruiter' ? '/dashboard' : '/jobs'))
+      const res = await api.post('auth/login/', data);
+      const { access, refresh } = res.data;
+      localStorage.setItem('access_token', access);
+      localStorage.setItem('refresh_token', refresh);
+      navigate('/');
     } catch (err) {
-      setError(err.detail || 'Login failed. Please check your credentials.')
-    } finally {
-      setLoading(false)
+      console.error(err);
+      alert(err?.response?.data || 'Login failed');
     }
-  }
+  };
 
   return (
-    <MainLayout>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4 py-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-lg shadow-lg max-w-md w-full p-8"
-        >
-          <h1 className="text-3xl font-bold text-center mb-6 text-gray-900">Welcome Back</h1>
-
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
-
-            <Button
-              type="submit"
-              disabled={loading}
-              className="w-full"
-            >
-              {loading ? <Spinner size="sm" /> : 'Login'}
-            </Button>
-          </form>
-
-          <p className="text-center text-gray-600 mt-6">
-            Don't have an account?{' '}
-            <a href="/register" className="text-blue-600 hover:text-blue-700 font-semibold">
-              Register
-            </a>
-          </p>
-        </motion.div>
-      </div>
-    </MainLayout>
-  )
+    <div className="max-w-md mx-auto bg-white p-6 rounded shadow">
+      <h2 className="text-2xl mb-4">Login</h2>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div>
+          <label className="block text-sm">Email</label>
+          <input type="email" {...register('email', { required: true })} className="w-full border px-3 py-2 rounded" />
+          {errors.email && <span className="text-red-500">Email is required</span>}
+        </div>
+        <div>
+          <label className="block text-sm">Password</label>
+          <input type="password" {...register('password', { required: true })} className="w-full border px-3 py-2 rounded" />
+        </div>
+        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">Login</button>
+      </form>
+    </div>
+  );
 }
-
-export default Login

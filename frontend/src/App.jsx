@@ -1,77 +1,27 @@
-import React from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import { AuthProvider } from './context/AuthContext'
-import PrivateRoute from './layouts/PrivateRoute'
-import './index.css'
+import React from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
+import Register from './pages/Register';
+import Login from './pages/Login';
 
-// Pages
-import Home from './pages/Home'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import Jobs from './pages/Jobs'
-import JobDetails from './pages/JobDetails'
-import Profile from './pages/Profile'
-import Applications from './pages/Applications'
-import SavedJobs from './pages/SavedJobs'
-import Dashboard from './pages/Dashboard'
-import PostJob from './pages/PostJob'
-import NotFound from './pages/NotFound'
-
-function App() {
+export default function App() {
   return (
-    <Router>
-      <AuthProvider>
+    <div className="min-h-screen bg-gray-50">
+      <nav className="bg-white shadow p-4">
+        <div className="container mx-auto flex justify-between">
+          <Link to="/" className="font-bold">HireFlow</Link>
+          <div className="flex gap-4">
+            <Link to="/login">Login</Link>
+            <Link to="/register">Register</Link>
+          </div>
+        </div>
+      </nav>
+      <main className="container mx-auto p-4">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<h2>Welcome to HireFlow — build out the UI</h2>} />
           <Route path="/register" element={<Register />} />
-          <Route path="/jobs" element={<Jobs />} />
-          <Route path="/jobs/:slug" element={<JobDetails />} />
-          <Route
-            path="/profile"
-            element={
-              <PrivateRoute>
-                <Profile />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/applications"
-            element={
-              <PrivateRoute allowedRoles={['candidate', 'recruiter']}>
-                <Applications />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/saved-jobs"
-            element={
-              <PrivateRoute allowedRoles={['candidate']}>
-                <SavedJobs />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              <PrivateRoute allowedRoles={['recruiter', 'candidate']}>
-                <Dashboard />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/post-job"
-            element={
-              <PrivateRoute allowedRoles={['recruiter']}>
-                <PostJob />
-              </PrivateRoute>
-            }
-          />
-          <Route path="*" element={<NotFound />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
-      </AuthProvider>
-    </Router>
-  )
+      </main>
+    </div>
+  );
 }
-
-export default App
