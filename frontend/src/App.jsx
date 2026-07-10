@@ -9,6 +9,10 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Jobs from './pages/Jobs'
+import JobDetails from './pages/JobDetails'
+import Profile from './pages/Profile'
+import Applications from './pages/Applications'
+import SavedJobs from './pages/SavedJobs'
 import Dashboard from './pages/Dashboard'
 import PostJob from './pages/PostJob'
 import NotFound from './pages/NotFound'
@@ -22,6 +26,31 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/jobs" element={<Jobs />} />
+          <Route path="/jobs/:slug" element={<JobDetails />} />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/applications"
+            element={
+              <PrivateRoute allowedRoles={['candidate', 'recruiter']}>
+                <Applications />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/saved-jobs"
+            element={
+              <PrivateRoute allowedRoles={['candidate']}>
+                <SavedJobs />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="/dashboard"
             element={

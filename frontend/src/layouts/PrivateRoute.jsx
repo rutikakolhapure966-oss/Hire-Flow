@@ -1,6 +1,6 @@
 import React from 'react'
 import { Navigate } from 'react-router-dom'
-from { useAuth } from '../context/AuthContext'
+import { useAuth } from '../context/AuthContext'
 import Spinner from '../components/Spinner'
 
 const PrivateRoute = ({ children, allowedRoles = [] }) => {

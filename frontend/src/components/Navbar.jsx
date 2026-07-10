@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { FaBriefcase, FaMenu, FaTimes } from 'react-icons/fa'
+import { FaBriefcase, FaMenu, FaTimes, FaBell } from 'react-icons/fa'
 import { motion } from 'framer-motion'
 
 const Navbar = () => {
@@ -32,9 +32,17 @@ const Navbar = () => {
               </>
             )}
             {isAuthenticated && user?.role === 'candidate' && (
-              <Link to="/profile" className="text-gray-700 hover:text-blue-600 transition">
-                Profile
-              </Link>
+              <>
+                <Link to="/applications" className="text-gray-700 hover:text-blue-600 transition">
+                  Applications
+                </Link>
+                <Link to="/saved-jobs" className="text-gray-700 hover:text-blue-600 transition">
+                  Saved
+                </Link>
+                <Link to="/profile" className="text-gray-700 hover:text-blue-600 transition">
+                  Profile
+                </Link>
+              </>
             )}
             {isAuthenticated ? (
               <>
@@ -86,6 +94,19 @@ const Navbar = () => {
                 </Link>
                 <Link to="/post-job" className="block text-gray-700 hover:text-blue-600">
                   Post Job
+                </Link>
+              </>
+            )}
+            {isAuthenticated && user?.role === 'candidate' && (
+              <>
+                <Link to="/applications" className="block text-gray-700 hover:text-blue-600">
+                  Applications
+                </Link>
+                <Link to="/saved-jobs" className="block text-gray-700 hover:text-blue-600">
+                  Saved Jobs
+                </Link>
+                <Link to="/profile" className="block text-gray-700 hover:text-blue-600">
+                  Profile
                 </Link>
               </>
             )}
