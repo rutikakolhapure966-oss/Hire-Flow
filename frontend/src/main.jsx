@@ -1,16 +1,20 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App';
-import { AuthProvider } from './context/AuthContext';
-import './index.css';
-
-createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </BrowserRouter>
-  </React.StrictMode>
-);
+*** Begin Patch
+*** Update File: frontend/src/main.jsx
+@@
+-import { AuthProvider } from './context/AuthContext';
++import { AuthProvider } from './context/AuthContext';
++import { ToastProvider } from './context/ToastContext';
+@@
+-    <BrowserRouter>
+-      <AuthProvider>
+-        <App />
+-      </AuthProvider>
+-    </BrowserRouter>
++    <BrowserRouter>
++      <AuthProvider>
++        <ToastProvider>
++          <App />
++        </ToastProvider>
++      </AuthProvider>
++    </BrowserRouter>
+*** End Patch
